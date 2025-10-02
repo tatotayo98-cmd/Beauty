@@ -1,0 +1,126 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║          🛍️  BEAUTY&HOME.MA - E-COMMERCE COMPLET 🛍️          ║
+║                                                               ║
+║     Site e-commerce avec panel admin pour le Maroc 🇲🇦        ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📁 FICHIERS IMPORTANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. 🚀 DEMARRAGE-RAPIDE.md
+   → Commencez ICI ! Guide pas-à-pas en 5 minutes
+
+2. 📖 README.md
+   → Vue d'ensemble du projet et installation
+
+3. 📚 INSTRUCTIONS.md
+   → Guide détaillé de configuration
+
+4. ✅ FONCTIONNALITES.md
+   → Liste complète des fonctionnalités implémentées
+
+5. 🗄️ database-setup.sql
+   → Script SQL à exécuter dans Supabase (obligatoire)
+
+6. 🌱 seed-data.sql
+   → Données de test (optionnel mais recommandé)
+
+
+⚡ DÉMARRAGE ULTRA-RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Créez un projet GRATUIT sur supabase.com
+2. Récupérez votre URL et anon key
+3. Modifiez le fichier .env avec vos clés
+4. Exécutez database-setup.sql dans Supabase SQL Editor
+5. Lancez : npm install && npm run dev
+6. Créez votre compte admin (voir DEMARRAGE-RAPIDE.md)
+
+
+✨ FONCTIONNALITÉS PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Interface publique e-commerce
+✅ Panel admin complet (Shopify-like)
+✅ Dashboard avec statistiques
+✅ Gestion produits (CRUD + images)
+✅ Gestion commandes + statuts
+✅ Gestion clients
+✅ Codes promo (%, montant fixe)
+✅ Bannières marketing
+✅ Base de données PostgreSQL réelle
+✅ Authentification sécurisée
+✅ RLS (Row Level Security)
+✅ Mobile-first responsive
+
+
+🎯 ACCÈS RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 Site public    : http://localhost:5173
+🔐 Panel admin    : http://localhost:5173/admin
+🛒 Boutique       : http://localhost:5173/shop
+
+
+🛠️ TECHNOLOGIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend   : React + TypeScript + Vite
+Styling    : Tailwind CSS
+Backend    : Supabase (PostgreSQL + Auth)
+Routing    : React Router v6
+Icons      : Lucide React
+
+
+📊 CE QUI EST INCLUS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pages publiques :
+  ✓ Page d'accueil avec bannières
+  ✓ Catalogue produits avec filtres
+  ✓ Fiches produits
+  ✓ Panier
+  ✓ Checkout
+  ✓ Connexion/Inscription
+  ✓ Suivi de commande
+
+Pages admin :
+  ✓ Dashboard avec stats
+  ✓ Gestion produits (liste, création, édition)
+  ✓ Gestion commandes (liste, changement statut)
+  ✓ Gestion clients
+  ✓ Codes promo (création, limite usage)
+  ✓ Bannières (upload, ordre, dates)
+  ✓ Paramètres
+
+Base de données :
+  ✓ 13 tables complètes
+  ✓ RLS sur toutes les tables
+  ✓ Policies admin/client
+  ✓ Fonctions & triggers
+  ✓ Index optimisés
+
+
+🆘 BESOIN D'AIDE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Consultez DEMARRAGE-RAPIDE.md
+2. Lisez la section "Problèmes courants"
+3. Vérifiez que database-setup.sql est bien exécuté
+4. Assurez-vous que .env contient vos vraies clés Supabase
+
+
+💡 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Une fois lancé :
+1. Créez vos catégories
+2. Ajoutez vos produits
+3. Configurez des bannières
+4. Créez des codes promo
+5. Testez une commande
+
+
+🎉 Tout est prêt ! Consultez DEMARRAGE-RAPIDE.md pour commencer !
