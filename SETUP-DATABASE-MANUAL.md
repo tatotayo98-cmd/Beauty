@@ -4,7 +4,7 @@ Les outils automatiques ne fonctionnent pas actuellement. Voici comment créer l
 
 ## Méthode 1 : Via l'interface Supabase (RECOMMANDÉ)
 
-1. Va sur https://0ec90b57d6e95fcbda19832f.supabase.co
+1. Va sur https://0ec90c'zeb57d6e95fcbda19832f.supabase.co
 2. Connecte-toi à ton compte Supabase
 3. Dans le menu de gauche, clique sur **"SQL Editor"**
 4. Copie tout le contenu du fichier `database-setup.sql`
