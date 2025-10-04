@@ -37,7 +37,7 @@ export default function AdminLogin() {
           throw new Error('Accès refusé. Vous n\'avez pas les droits administrateur.');
         }
 
-        navigate('/admin/dashboard');
+        navigate('/admin');
       }
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la connexion');
