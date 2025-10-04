@@ -35,11 +35,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const checkAdmin = async (userId: string) => {
     try {
+      console.log('Checking admin status for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', userId)
         .maybeSingle();
+
+      console.log('Profile query result:', { data, error });
 
       if (error) {
         console.error('Error checking admin status:', error);
@@ -47,7 +50,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
-      setIsAdmin(data?.role === 'admin');
+      const adminStatus = data?.role === 'admin';
+      console.log('Is admin:', adminStatus);
+      setIsAdmin(adminStatus);
     } catch (err) {
       console.error('Exception checking admin status:', err);
       setIsAdmin(false);
