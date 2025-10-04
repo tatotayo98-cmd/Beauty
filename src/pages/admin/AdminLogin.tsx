@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, Mail, AlertCircle } from 'lucide-react';
+import { Lock, Mail, CircleAlert as AlertCircle } from 'lucide-react';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
