@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth';
 import {
   LayoutDashboard,
@@ -14,6 +14,12 @@ import {
 export const AdminLayout = () => {
   const { signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/admin/login');
+  };
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -63,7 +69,7 @@ export const AdminLayout = () => {
             })}
 
             <button
-              onClick={signOut}
+              onClick={handleSignOut}
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition w-full"
             >
               <LogOut className="w-5 h-5" />

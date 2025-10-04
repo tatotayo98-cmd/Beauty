@@ -8,6 +8,7 @@ import { Checkout } from './pages/Checkout';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { OrderTracking } from './pages/OrderTracking';
+import AdminLogin from './pages/admin/AdminLogin';
 import { AdminLayout } from './pages/admin/AdminLayout';
 import { AdminDashboard } from './pages/admin/Dashboard';
 import { AdminProducts } from './pages/admin/Products';
@@ -30,7 +31,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/login" replace />;
   }
 
   return <>{children}</>;
@@ -52,6 +53,7 @@ function App() {
           <Route path="/track-order" element={<OrderTracking />} />
 
           {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin"
             element={
