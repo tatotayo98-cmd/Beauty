@@ -46,11 +46,16 @@ export const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-400">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-                <span>+212 6XX XX XX XX</span>
+                <a href="tel:+212645675092" className="hover:text-white transition">+212 6456 750 92</a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>contact@beautyhome.ma</span>
+                <a href="mailto:beauty.home.ma.212@gmail.com" className="hover:text-white transition">beauty.home.ma.212@gmail.com</a>
+              </li>
+              <li className="text-xs mt-4">
+                <p className="font-semibold text-white mb-1">Livraison</p>
+                <p>Casablanca : 24h</p>
+                <p>Autres villes : 24h-48h</p>
               </li>
             </ul>
           </div>
