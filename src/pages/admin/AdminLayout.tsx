@@ -1,21 +1,7 @@
 import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth';
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Tag,
-  Image,
-  Settings,
-  LogOut,
-  BarChart3,
-  TrendingUp,
-  Boxes,
-  ChevronDown,
-  ChevronRight,
-} from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image, Settings, LogOut, ChartBar as BarChart3, TrendingUp, Boxes, ChevronDown, ChevronRight } from 'lucide-react';
 
 export const AdminLayout = () => {
   const { signOut } = useAuth();

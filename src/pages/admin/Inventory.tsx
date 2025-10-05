@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Package, AlertTriangle, DollarSign, TrendingDown } from 'lucide-react';
+import { Package, TriangleAlert as AlertTriangle, DollarSign, TrendingDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Product {
