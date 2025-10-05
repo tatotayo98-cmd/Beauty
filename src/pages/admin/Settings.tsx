@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Save, AlertCircle, CheckCircle, CreditCard } from 'lucide-react';
+import { Save, CircleAlert as AlertCircle, CircleCheck as CheckCircle, CreditCard } from 'lucide-react';
 
 interface StoreSettings {
   id: string;
