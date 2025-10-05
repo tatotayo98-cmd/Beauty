@@ -1,32 +1,22 @@
-import { useState } from 'react';
-import { Plus, Mail, MessageSquare, Image } from 'lucide-react';
+import { Mail, MessageSquare, Image } from 'lucide-react';
 
 export const AdminCampaigns = () => {
-  const [showCreateModal] = useState(false);
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Campagnes</h1>
-        <button className="flex items-center gap-2 bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
-          <Plus className="w-5 h-5" />
-          Créer une campagne
-        </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-12 text-center mb-8">
-        <div className="w-32 h-32 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
-          <Mail className="w-16 h-16 text-blue-600" />
+      <div className="bg-white rounded-lg shadow p-8 text-center mb-6">
+        <div className="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+          <Mail className="w-12 h-12 text-blue-600" />
         </div>
-        <h2 className="text-2xl font-bold mb-4">Centralisez le suivi de vos campagnes</h2>
-        <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+        <h2 className="text-xl font-bold mb-3">Centralisez le suivi de vos campagnes</h2>
+        <p className="text-gray-600 text-sm mb-4 max-w-2xl mx-auto">
           Créez des campagnes de marketing pour évaluer comment les initiatives marketing contribuent
           aux objectifs commerciaux. Capturez les points de contact en ligne et hors ligne, ajoutez
           des activités de campagne provenant de plusieurs canaux de marketing et suivez les résultats.
         </p>
-        <button className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
-          Créer une campagne
-        </button>
       </div>
 
       <div className="bg-white rounded-lg shadow p-8">
@@ -69,14 +59,6 @@ export const AdminCampaigns = () => {
         </div>
       </div>
 
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-2xl w-full">
-            <h2 className="text-2xl font-bold mb-6">Créer une campagne</h2>
-            <p className="text-gray-600">Fonctionnalité en développement...</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

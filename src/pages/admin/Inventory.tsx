@@ -1,232 +1,308 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { Package, TriangleAlert as AlertTriangle, DollarSign, TrendingDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-interface Product {
-  id: string;
-  title: string;
-  sku: string;
-  stock_quantity: number;
-  cost_per_item: number;
-  low_stock_threshold: number;
-  images: string[];
-}
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const AdminInventory = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'low' | 'out'>('all');
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const loadProducts = async () => {
-    setLoading(true);
-    const { data } = await supabase
-      .from('products')
-      .select('id, title, sku, stock_quantity, cost_per_item, low_stock_threshold, images')
-      .order('title');
-
-    if (data) {
-      setProducts(data);
-    }
-    setLoading(false);
-  };
-
-  const filteredProducts = products.filter(p => {
-    if (filter === 'low') {
-      return p.stock_quantity > 0 && p.stock_quantity <= p.low_stock_threshold;
-    }
-    if (filter === 'out') {
-      return p.stock_quantity === 0;
-    }
-    return true;
-  });
-
-  const totalValue = products.reduce(
-    (sum, p) => sum + (p.stock_quantity * (p.cost_per_item || 0)),
-    0
-  );
-  const lowStockCount = products.filter(
-    p => p.stock_quantity > 0 && p.stock_quantity <= p.low_stock_threshold
-  ).length;
-  const outOfStockCount = products.filter(p => p.stock_quantity === 0).length;
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
-      </div>
-    );
-  }
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Gestion du stock</h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm ${
-              filter === 'all'
-                ? 'bg-pink-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Tous ({products.length})
-          </button>
-          <button
-            onClick={() => setFilter('low')}
-            className={`px-4 py-2 rounded-lg text-sm ${
-              filter === 'low'
-                ? 'bg-pink-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Stock faible ({lowStockCount})
-          </button>
-          <button
-            onClick={() => setFilter('out')}
-            className={`px-4 py-2 rounded-lg text-sm ${
-              filter === 'out'
-                ? 'bg-pink-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            Rupture ({outOfStockCount})
-          </button>
+        <div>
+          <h1 className="text-2xl font-bold">Analyses de données</h1>
+          <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+            <span>Aujourd'hui</span>
+            <span>•</span>
+            <span>{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+            <span>•</span>
+            <span>MAD</span>
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-sm font-medium">Produits en stock</h3>
-            <Package className="w-5 h-5 text-blue-500" />
+          <h3 className="text-gray-600 text-sm font-medium mb-2">Ventes brutes</h3>
+          <p className="text-3xl font-bold">0 MAD</p>
+          <div className="mt-2 text-sm text-gray-500">
+            <span className="text-blue-500">—</span>
           </div>
-          <p className="text-3xl font-bold">{products.filter(p => p.stock_quantity > 0).length}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-sm font-medium">Valeur totale du stock</h3>
-            <DollarSign className="w-5 h-5 text-green-500" />
+          <h3 className="text-gray-600 text-sm font-medium mb-2">Taux de clients récurrents</h3>
+          <p className="text-3xl font-bold">0 %</p>
+          <div className="mt-2 text-sm text-gray-500">
+            <span className="text-blue-500">—</span>
           </div>
-          <p className="text-3xl font-bold">{totalValue.toFixed(2)} MAD</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-sm font-medium">Stock faible</h3>
-            <AlertTriangle className="w-5 h-5 text-orange-500" />
+          <h3 className="text-gray-600 text-sm font-medium mb-2">Commandes traitées</h3>
+          <p className="text-3xl font-bold">0</p>
+          <div className="mt-2 text-sm text-gray-500">
+            <span className="text-blue-500">—</span>
           </div>
-          <p className="text-3xl font-bold">{lowStockCount}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-600 text-sm font-medium">Rupture de stock</h3>
-            <TrendingDown className="w-5 h-5 text-red-500" />
+          <h3 className="text-gray-600 text-sm font-medium mb-2">Commandes</h3>
+          <p className="text-3xl font-bold">0</p>
+          <div className="mt-2 text-sm text-gray-500">
+            <span className="text-blue-500">—</span>
           </div>
-          <p className="text-3xl font-bold">{outOfStockCount}</p>
         </div>
       </div>
 
-      {filteredProducts.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <Package className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500 text-lg">Aucun produit trouvé</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold mb-4">Ventes totales dans le temps</h3>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[{ date: '00 h', value: 0 }, { date: '04 h', value: 0 }, { date: '08 h', value: 0 }, { date: '12 h', value: 0 }, { date: '16 h', value: 0 }, { date: '20 h', value: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeDasharray="5 5" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-3xl font-bold mt-4">0 MAD <span className="text-gray-400 text-sm">—</span></p>
+          <p className="text-sm text-gray-500">10 MAD</p>
+          <div className="mt-2 flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span>5 oct. 2025</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-blue-300"></div>
+              <span>4 oct. 2025</span>
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold mb-4">Répartition des ventes totales</h3>
+          <div className="space-y-3">
+            {[
+              { label: 'Ventes brutes', value: '0,00 MAD' },
+              { label: 'Réductions', value: '0,00 MAD' },
+              { label: 'Retours', value: '0,00 MAD' },
+              { label: 'Ventes nettes', value: '0,00 MAD' },
+              { label: 'Frais d\'expédition', value: '0,00 MAD' },
+              { label: 'Frais de retour', value: '0,00 MAD' },
+              { label: 'Taxes', value: '0,00 MAD' },
+            ].map((item, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <span className="text-sm text-blue-600">{item.label}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold">{item.value}</span>
+                  <span className="text-gray-400">—</span>
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between items-center border-t pt-3">
+              <span className="text-sm text-blue-600 font-semibold">Ventes totales</span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold">0,00 MAD</span>
+                <span className="text-gray-400">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Ventes totales par canal de vente</h3>
+          <div className="flex items-center justify-center h-32">
+            <p className="text-gray-400 text-sm text-center">Aucune donnée trouvée pour cette plage de dates</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Historique de la valeur moyenne des commandes</h3>
+          <div className="h-32">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[{ date: '00 h', value: 0 }, { date: '12 h', value: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeDasharray="5 5" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-2xl font-bold mt-2">0 MAD <span className="text-gray-400 text-sm">—</span></p>
+          <p className="text-xs text-gray-500">10 MAD</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Ventes totales par produit</h3>
+          <div className="flex items-center justify-center h-32">
+            <p className="text-gray-400 text-sm text-center">Aucune donnée trouvée pour cette plage de dates</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Historique des visites</h3>
+          <div className="h-32">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[{ date: '00 h', value: 1 }, { date: '12 h', value: 15 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Line type="monotone" dataKey="value" stroke="#06b6d4" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-2xl font-bold mt-2">1 <span className="text-gray-400 text-sm">—</span></p>
+          <p className="text-xs text-gray-500">15</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Taux de conversion dans le temps</h3>
+          <div className="h-32">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={[{ date: '00 h', value: 0 }, { date: '12 h', value: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeDasharray="5 5" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="text-2xl font-bold mt-2">0 % <span className="text-gray-400 text-sm">—</span></p>
+          <p className="text-xs text-gray-500">100 %</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Ventilation du taux de conversion</h3>
+          <div className="mt-2">
+            <div className="grid grid-cols-4 gap-1 text-xs text-gray-600 mb-2">
+              <div>Visites</div>
+              <div>Ajou...</div>
+              <div>Étape...</div>
+              <div>Payé</div>
+            </div>
+            <div className="grid grid-cols-4 gap-1 text-xs font-semibold mb-1">
+              <div>100%<br/>1</div>
+              <div>0%<br/>0</div>
+              <div>0%<br/>0</div>
+              <div>0%<br/>0</div>
+            </div>
+            <div className="grid grid-cols-4 gap-1 text-xs text-gray-500 mb-3">
+              <div>↓ 0 %</div>
+              <div>↓ 0 %</div>
+              <div>↓ 0 %</div>
+              <div>↓ 0 %</div>
+            </div>
+            <div className="relative h-20">
+              <div className="absolute bottom-0 left-0 w-1/4 bg-blue-600 rounded-t" style={{ height: '100%' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Visites par type d'appareil</h3>
+          <div className="flex flex-col items-center justify-center h-40">
+            <div className="relative w-32 h-32">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[{ name: 'Bureau', value: 1 }]}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={60}
+                    fill="#06b6d4"
+                    dataKey="value"
+                  >
+                    <Cell fill="#06b6d4" />
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-2xl font-bold">1</p>
+                  <p className="text-xs text-gray-500">—</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-xs mt-3">
+              <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+              <span>Bureau</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Visites par emplacement</h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-6 bg-blue-600 rounded"></div>
+              <span className="text-xs flex-1">United States · Iowa · Council Bluffs</span>
+              <span className="text-xs font-semibold">1</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-16 bg-blue-300 rounded"></div>
+              <span className="text-xs flex-1">Morocco · Casablanca-Settat · Casa...</span>
+              <span className="text-xs font-semibold">21</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-sm font-semibold mb-4">Ventes totales par référent social</h3>
+          <div className="flex items-center justify-center h-32">
+            <p className="text-gray-400 text-sm text-center">Aucune donnée trouvée pour cette plage de dates</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h3 className="text-sm font-semibold mb-4">Analyse des cohortes de clients</h3>
+        <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Produit
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  SKU
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Coût unitaire
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Valeur totale
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Statut
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Cohorte</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Clients</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Taux de rét...</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Mois 0</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredProducts.map((product) => {
-                const isLowStock = product.stock_quantity > 0 && product.stock_quantity <= product.low_stock_threshold;
-                const isOutOfStock = product.stock_quantity === 0;
-                const totalValue = product.stock_quantity * (product.cost_per_item || 0);
-
-                return (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <img
-                          src={product.images?.[0] || 'https://via.placeholder.com/50'}
-                          alt={product.title}
-                          className="w-10 h-10 rounded object-cover mr-3"
-                        />
-                        <span className="text-sm font-medium text-gray-900">{product.title}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {product.sku || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                      {product.stock_quantity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {product.cost_per_item ? `${product.cost_per_item.toFixed(2)} MAD` : '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                      {totalValue.toFixed(2)} MAD
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {isOutOfStock ? (
-                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                          Rupture
-                        </span>
-                      ) : isLowStock ? (
-                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">
-                          Stock faible
-                        </span>
-                      ) : (
-                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                          En stock
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <Link
-                        to={`/admin/products/${product.id}/edit`}
-                        className="text-pink-600 hover:text-pink-700 font-medium"
-                      >
-                        Modifier
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
+              <tr>
+                <td className="px-4 py-2 text-xs">Toutes les cohortes</td>
+                <td className="px-4 py-2 text-xs">0</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 text-xs">oct. 2024</td>
+                <td className="px-4 py-2 text-xs">0</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 text-xs">nov. 2024</td>
+                <td className="px-4 py-2 text-xs">0</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+                <td className="px-4 py-2 text-xs">0,0 %</td>
+              </tr>
             </tbody>
           </table>
         </div>
-      )}
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-sm font-semibold mb-4">Visites par page de destination</h3>
+        <div className="text-center py-8">
+          <p className="text-gray-400 text-sm">Aucune donnée disponible</p>
+        </div>
+      </div>
     </div>
   );
 };
