@@ -1,16 +1,6 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth';
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Tag,
-  Image,
-  Settings,
-  LogOut,
-  BarChart3,
-} from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, Tag, Image, Settings, LogOut, ChartBar as BarChart3 } from 'lucide-react';
 
 export const AdminLayout = () => {
   const { signOut } = useAuth();
