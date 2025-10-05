@@ -23,6 +23,10 @@ export const AdminProductForm = () => {
     is_featured: false,
     meta_title: '',
     meta_description: '',
+    stock_quantity: '0',
+    cost_per_item: '',
+    track_inventory: true,
+    low_stock_threshold: '10',
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -62,6 +66,10 @@ export const AdminProductForm = () => {
         is_featured: data.is_featured,
         meta_title: data.meta_title || '',
         meta_description: data.meta_description || '',
+        stock_quantity: data.stock_quantity?.toString() || '0',
+        cost_per_item: data.cost_per_item?.toString() || '',
+        track_inventory: data.track_inventory ?? true,
+        low_stock_threshold: data.low_stock_threshold?.toString() || '10',
       });
     }
   };
@@ -137,6 +145,9 @@ export const AdminProductForm = () => {
       base_price: parseFloat(formData.base_price),
       compare_price: formData.compare_price ? parseFloat(formData.compare_price) : null,
       category_id: formData.category_id || null,
+      stock_quantity: parseInt(formData.stock_quantity) || 0,
+      cost_per_item: formData.cost_per_item ? parseFloat(formData.cost_per_item) : null,
+      low_stock_threshold: parseInt(formData.low_stock_threshold) || 10,
     };
 
     try {
@@ -330,6 +341,76 @@ export const AdminProductForm = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Inventaire</h3>
+
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Quantité en stock
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.stock_quantity}
+                  onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Coût par article (MAD)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.cost_per_item}
+                  onChange={(e) => setFormData({ ...formData, cost_per_item: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Le coût que vous payez pour ce produit
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Seuil de stock faible
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={formData.low_stock_threshold}
+                onChange={(e) => setFormData({ ...formData, low_stock_threshold: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Recevoir une alerte quand le stock atteint ce niveau
+              </p>
+            </div>
+
+            <label className="flex items-center gap-2 mb-4">
+              <input
+                type="checkbox"
+                checked={formData.track_inventory}
+                onChange={(e) => setFormData({ ...formData, track_inventory: e.target.checked })}
+                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+              />
+              <span className="text-sm font-medium text-gray-700">Suivre la quantité</span>
+            </label>
+
+            {formData.stock_quantity && formData.cost_per_item && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm font-medium text-gray-700">
+                  Valeur du stock: {(parseInt(formData.stock_quantity) * parseFloat(formData.cost_per_item || '0')).toFixed(2)} MAD
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-6">

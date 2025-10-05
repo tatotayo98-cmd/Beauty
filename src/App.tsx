@@ -21,6 +21,11 @@ import { AdminDiscounts } from './pages/admin/Discounts';
 import { AdminBanners } from './pages/admin/Banners';
 import { AdminSettings } from './pages/admin/Settings';
 import { AdminAnalytics } from './pages/admin/Analytics';
+import { AdminAbandonedCarts } from './pages/admin/AbandonedCarts';
+import { AdminMarketing } from './pages/admin/Marketing';
+import { AdminCampaigns } from './pages/admin/Campaigns';
+import { AdminAttribution } from './pages/admin/Attribution';
+import { AdminInventory } from './pages/admin/Inventory';
 
 function AnalyticsTracker() {
   const location = useLocation();
@@ -85,10 +90,15 @@ function App() {
             <Route path="products/new" element={<AdminProductForm />} />
             <Route path="products/:id/edit" element={<AdminProductForm />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/abandoned" element={<AdminAbandonedCarts />} />
             <Route path="customers" element={<AdminCustomers />} />
             <Route path="discounts" element={<AdminDiscounts />} />
             <Route path="banners" element={<AdminBanners />} />
             <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="marketing" element={<AdminMarketing />} />
+            <Route path="marketing/campaigns" element={<AdminCampaigns />} />
+            <Route path="marketing/attribution" element={<AdminAttribution />} />
+            <Route path="inventory" element={<AdminInventory />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
