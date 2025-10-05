@@ -120,7 +120,7 @@ export const Checkout = () => {
       clearCart();
 
       if (paymentMethod === 'paypal') {
-        alert('Redirection vers PayPal... (À configurer dans les paramètres administrateur)');
+        alert('Commande enregistrée ! Le paiement PayPal sera disponible prochainement. Nous vous contacterons pour finaliser le paiement.');
       } else {
         alert('Commande confirmée ! Paiement à la livraison.');
       }
