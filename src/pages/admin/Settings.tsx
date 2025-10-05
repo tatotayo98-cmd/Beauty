@@ -63,23 +63,45 @@ export const AdminSettings = () => {
       }
 
       const updateData = {
-        ...settings,
+        paypal_client_id: settings.paypal_client_id,
+        paypal_secret: settings.paypal_secret,
+        paypal_mode: settings.paypal_mode,
+        store_name: settings.store_name,
+        store_email: settings.store_email,
+        store_phone: settings.store_phone,
         updated_at: new Date().toISOString(),
         updated_by: user.id,
       };
 
-      const { error } = await supabase
-        .from('store_settings')
-        .upsert([updateData], { onConflict: 'id' });
+      if (settings.id) {
+        const { error } = await supabase
+          .from('store_settings')
+          .update(updateData)
+          .eq('id', settings.id);
 
-      if (error) throw error;
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase
+          .from('store_settings')
+          .insert([updateData])
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) {
+          setSettings({ ...settings, id: data.id });
+        }
+      }
 
       setMessage({ type: 'success', text: 'Paramètres enregistrés avec succès !' });
 
       setTimeout(() => setMessage(null), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving settings:', error);
-      setMessage({ type: 'error', text: 'Erreur lors de l\'enregistrement des paramètres' });
+      setMessage({
+        type: 'error',
+        text: `Erreur: ${error.message || 'Veuillez créer la table store_settings d\'abord'}`
+      });
     } finally {
       setSaving(false);
     }
