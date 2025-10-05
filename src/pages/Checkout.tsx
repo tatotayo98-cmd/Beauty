@@ -117,15 +117,39 @@ export const Checkout = () => {
 
       if (itemsError) throw itemsError;
 
-      clearCart();
-
       if (paymentMethod === 'paypal') {
-        alert('Commande enregistrée ! Le paiement PayPal sera disponible prochainement. Nous vous contacterons pour finaliser le paiement.');
-      } else {
-        alert('Commande confirmée ! Paiement à la livraison.');
-      }
+        const paypalResponse = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paypal-create-order`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({
+              amount: totalPrice,
+              orderId: order.id,
+            }),
+          }
+        );
 
-      navigate('/track-order');
+        if (!paypalResponse.ok) {
+          throw new Error('Erreur lors de la création du paiement PayPal');
+        }
+
+        const { approveUrl } = await paypalResponse.json();
+
+        if (approveUrl) {
+          clearCart();
+          window.location.href = approveUrl;
+        } else {
+          throw new Error('URL de paiement PayPal non disponible');
+        }
+      } else {
+        clearCart();
+        alert('Commande confirmée ! Paiement à la livraison.');
+        navigate('/track-order');
+      }
     } catch (error) {
       console.error('Error creating order:', error);
       alert('Une erreur est survenue. Veuillez réessayer.');
