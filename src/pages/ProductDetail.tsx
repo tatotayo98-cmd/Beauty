@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { supabase } from '../lib/supabase';
+import { useCart } from '../lib/cart';
 import { ShoppingCart, ArrowLeft, Minus, Plus } from 'lucide-react';
 
 interface Product {
@@ -19,10 +20,12 @@ interface Product {
 
 export const ProductDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     loadProduct();
@@ -79,6 +82,22 @@ export const ProductDetail = () => {
   const discount = product.compare_price && product.compare_price > product.base_price
     ? Math.round(((product.compare_price - product.base_price) / product.compare_price) * 100)
     : null;
+
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    for (let i = 0; i < quantity; i++) {
+      addToCart({
+        id: product.id,
+        name: product.title,
+        price: product.base_price,
+        image_url: product.images?.[0] || '',
+      });
+    }
+
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -195,9 +214,16 @@ export const ProductDetail = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-pink-600 text-white py-4 rounded-lg font-semibold hover:bg-pink-700 transition flex items-center justify-center gap-2">
+                <button
+                  onClick={handleAddToCart}
+                  className={`w-full py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
+                    addedToCart
+                      ? 'bg-green-600 text-white'
+                      : 'bg-pink-600 text-white hover:bg-pink-700'
+                  }`}
+                >
                   <ShoppingCart className="w-5 h-5" />
-                  Ajouter au panier
+                  {addedToCart ? 'Ajouté au panier!' : 'Ajouter au panier'}
                 </button>
               </div>
 

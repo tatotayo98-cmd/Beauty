@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Plus, X } from 'lucide-react';
+import { uploadProductImage } from '../../lib/storage';
+import { ArrowLeft, Plus, X, Upload } from 'lucide-react';
 
 export const AdminProductForm = () => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export const AdminProductForm = () => {
   });
 
   const [imageUrl, setImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadCategories();
@@ -88,6 +90,34 @@ export const AdminProductForm = () => {
         images: [...formData.images, imageUrl.trim()],
       });
       setImageUrl('');
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image');
+      return;
+    }
+
+    if (file.size > 5242880) {
+      alert('L\'image ne doit pas dépasser 5 Mo');
+      return;
+    }
+
+    setUploading(true);
+    const url = await uploadProductImage(file);
+    setUploading(false);
+
+    if (url) {
+      setFormData({
+        ...formData,
+        images: [...formData.images, url],
+      });
+    } else {
+      alert('Erreur lors de l\'upload de l\'image');
     }
   };
 
@@ -250,10 +280,30 @@ export const AdminProductForm = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Images
             </label>
+
+            <div className="mb-4">
+              <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition">
+                <Upload className="w-5 h-5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">
+                  {uploading ? 'Upload en cours...' : 'Télécharger une image depuis votre ordinateur'}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                  className="hidden"
+                />
+              </label>
+              <p className="text-xs text-gray-500 mt-1">
+                Format: JPG, PNG, WEBP, GIF - Taille max: 5 Mo
+              </p>
+            </div>
+
             <div className="flex gap-2 mb-3">
               <input
                 type="url"
-                placeholder="URL de l'image"
+                placeholder="Ou ajouter par URL"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"

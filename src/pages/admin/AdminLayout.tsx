@@ -9,6 +9,7 @@ import {
   Image,
   Settings,
   LogOut,
+  BarChart3,
 } from 'lucide-react';
 
 export const AdminLayout = () => {
@@ -23,6 +24,7 @@ export const AdminLayout = () => {
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
     { name: 'Produits', href: '/admin/products', icon: Package },
     { name: 'Commandes', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Clients', href: '/admin/customers', icon: Users },

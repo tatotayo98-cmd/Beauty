@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './lib/auth';
+import { useEffect } from 'react';
+import { initSession, trackPageView } from './lib/analytics';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
@@ -18,6 +20,21 @@ import { AdminCustomers } from './pages/admin/Customers';
 import { AdminDiscounts } from './pages/admin/Discounts';
 import { AdminBanners } from './pages/admin/Banners';
 import { AdminSettings } from './pages/admin/Settings';
+import { AdminAnalytics } from './pages/admin/Analytics';
+
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    initSession();
+  }, []);
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+
+  return null;
+}
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAdmin, loading } = useAuth();
@@ -41,6 +58,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <AnalyticsTracker />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
@@ -70,6 +88,7 @@ function App() {
             <Route path="customers" element={<AdminCustomers />} />
             <Route path="discounts" element={<AdminDiscounts />} />
             <Route path="banners" element={<AdminBanners />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>

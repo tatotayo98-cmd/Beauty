@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Menu, User, Search } from 'lucide-react';
 import { useAuth } from '../lib/auth';
+import { useCart } from '../lib/cart';
 import { useState } from 'react';
 
 export const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
+  const { totalItems } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -84,9 +86,11 @@ export const Navbar = () => {
 
             <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-lg transition relative">
               <ShoppingCart className="w-5 h-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
             </Link>
 
             <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
